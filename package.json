@@ -1,0 +1,22 @@
+{
+  "name": "c1-restaurant-webapp",
+  "version": "1.0.0",
+  "description": "A webapp that recommends restaurants and experiences",
+  "main": "index.js",
+  "author": "Kyle Feng",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-pug": "^3.3.0",
+    "gulp-server-livereload": "^1.9.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "pug": "^2.0.0-beta11",
+    "request": "^2.81.0",
+    "yelp-fusion": "^1.0.3"
+  }
+}
