@@ -1,48 +1,67 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const yelp = require('yelp-fusion');
+const Router = require('express-promise-router');
 
 // Load dotenv
 require('dotenv').config();
 
 const port = process.env.PORT || 8081;
 
+// Initialize app
+var app = express();
+
 // Configure app to use bodyParser()
 // This will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const yelpClient = require('./yelpClient');
+// TODO define app.use(function (err, req, res, next) { ... }) for error handling
 
-const router = express.Router();
+// Serve static files
+app.use(express.static('public'));
 
-router.get('/', function(req, res) {
-	res.json({ message: 'hooray! welcome to our api!' });   
+/* Routes */
+/******************************************************************************/
+app.get('/', (req, res) => {
+	res.render('index');
 });
 
-yelpClient.search({
-	term:'Four Barrel Coffee',
-	location: 'san francisco, ca'
-}).then(response => {
-	console.log(response.jsonBody.businesses[0].name);
-}).catch(e => {
-	console.log(e);
-});
+var apiRouter = Router();
+var yelpClient = require('./yelpClient');
 
-yelpClient.autocomplete({
-	text:'pizza'
-}).then(response => {
-	console.log(response.jsonBody.terms[0].text);
-}).catch(e => {
-	console.log(e);
-});
+// The basic pattern is
+// to return a promise that express-promise-router handles
+// TODO use mime-types, accept, send
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+// Proxy to Yelp, since the browser can't do cross-origin authorization
+apiRouter.proxyToYelp = function(path, command) {
+	apiRouter.get(path, (req, res) => {
+		// TODO filter out stuff, figure out whether to use location and longitude/latitude
+		var query = req.query || req.body;
 
-// START THE SERVER
-// =============================================================================
+		return yelpClient[command](query).then(response => {
+			res.json(response.data);
+		});
+	});
+};
+
+// Search
+apiRouter.proxyToYelp('/search', 'search');
+// Phone Search
+apiRouter.proxyToYelp('/phone_search', 'phoneSearch');
+// Transaction Search
+apiRouter.proxyToYelp('/transaction_search', 'transactionSearch');
+// Business
+apiRouter.proxyToYelp('/business', 'business');
+// Autocomplete
+apiRouter.proxyToYelp('/autocomplete', 'autocomplete');
+
+// Register API router
+app.use('/api', apiRouter);
+
+/******************************************************************************/
+// Start server
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log(`listening on ${port}`);
 

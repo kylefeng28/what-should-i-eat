@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Where Should I Eat Today?</title>
+    <!-- TODO require.js-->
+    <!-- jQuery-->
+    <script src="https://code.jquery.com/jquery-3.2.0.slim.min.js" integrity="sha256-qLAv0kBAihcHZLI3fv3WITKeRsUX27hd6upBBa0MSow=" crossorigin="anonymous"></script>
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Vue-->
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-axios"></script>
+  </head>
+  <body>
+    <div class="container" id="app">
+      <h1 class="text-center">Hello there!</h1>
+      <!-- Term-->
+      <label>Search term</label>
+      <div class="input-group"><span class="input-group-addon">I want</span>
+        <input class="form-control" type="text" :value="searchTerm" v-model="searchTerm">
+      </div>
+      <!-- Location-->
+      <label>Location</label>
+      <div class="input-group"><span class="input-group-addon">I'm at</span>
+        <input class="form-control" type="text" :value="location" v-model="location">
+      </div>
+      <button class="btn btn-default" @click="getOutput">Search!</button>
+      <div id="output">{{ output }}</div>
+    </div>
+  </body>
+</html></div>
+<script src="./main.js"></script>

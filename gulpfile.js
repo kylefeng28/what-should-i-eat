@@ -4,7 +4,7 @@ const pug = require('gulp-pug');
 const webserver = require('gulp-server-livereload');
 
 var paths = {
-	'pug': [ './*.pug' ]
+	'pug': [ 'views/*.pug' ]
 }
 
 gulp.task('pug', function() {
@@ -13,7 +13,7 @@ gulp.task('pug', function() {
 		.pipe(pug({
 			pretty: true
 		}))
-		.pipe(gulp.dest('.'));
+		.pipe(gulp.dest('public'));
 });
 
 gulp.task('watch', [ 'pug' ], function() {
@@ -21,11 +21,13 @@ gulp.task('watch', [ 'pug' ], function() {
 });
 
 gulp.task('dev', [ 'watch' ], function() {
+/*
 	gulp.src('.')
 		.pipe(webserver({
 			port: 8080,
 			livereload: true
 		}));
+*/
 })
 
 gulp.task('default', [ 'dev' ]);
