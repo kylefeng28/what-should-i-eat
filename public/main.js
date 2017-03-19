@@ -1,24 +1,30 @@
 var app = new Vue({
 	el: '#app',
 	data: {
-		searchTerm: 'pizza',
-		location: 'san francisco, ca',
-		output: ''
+		// searchTerm: 'Chinese food',
+		searchTerm: 'Today Asian Market',
+		location: 'Cary, NC',
+		output: null
 	},
 	computed: {
 	},
 	methods: {
-		getOutput: function () {
+		getOutput: async function () {
 			console.log('Searching for ' + this.searchTerm);
 
-			Vue.axios.get('/api/search', {
+			// TODO try catch
+			const result = await axios.get('/api/search', {
 				params: {
 					term: this.searchTerm,
 					location: this.location
 				}
-			}).then((result) => {
-				this.output = result;
-			})
+			});
+			
+			this.output = result.data;
+			console.log(this.output);
 		}
+	},
+	filters: {
+		join: (arr, separator) => arr.join(separator)
 	}
 });

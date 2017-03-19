@@ -21,29 +21,80 @@ html.no-js(lang='en-US')
 
 		// Vue
 		script(src='https://unpkg.com/vue')
-		script(src='https://unpkg.com/vue-axios')
 
 
 	body
 		#app.container
-			h1.text-center Hello there!
+			div#intput
+				h1.text-center Hello there!
 
-			// Term
-			label Search term
-			.input-group
-				span.input-group-addon I want
-				input.form-control(type='text', :value='searchTerm', v-model='searchTerm')
+				// Term
+				label Search term
+				.input-group
+					span.input-group-addon I want
+					input.form-control(type='text', :value='searchTerm', v-model='searchTerm')
 
-			// Location
-			label Location
-			.input-group
-				span.input-group-addon I'm at
-				input.form-control(type='text', :value='location', v-model='location')
+				br(TODO)
 
-			button.btn.btn-default(@click='getOutput') Search!
+				// Location
+				label Location
+				.input-group
+					span.input-group-addon I'm at
+					input.form-control(type='text', :value='location', v-model='location')
 
-			div#output {{ output }}
+				br(TODO)
 
-</div>
+				button.btn.btn-default(@click='getOutput') Search!
+
+			div#output(v-if='output')
+
+				br(TODO)
+
+				.alert.alert-success.text-center
+					template(v-if='output.total > 20')
+						| Woah, I found {{ output.total }} matches! Here are the first 20:
+					template(v-else)
+						| I found {{ output.total }} matches!
+				div(v-for='business in output.businesses'
+					itemscope, itemtype='http://schema.org/Restaurant',
+					aria-label='Restaurant')
+					.business-name(aria-label='Name')
+						h3 #[span(itemprop='name') {{ business.name }}]
+
+					.business-url(aria-label='Link to Yelp review')
+						a(itemprop='url', :href='business.url') Link to review
+
+					.business-phone(aria-label='Phone number')
+						| Phone Number: 
+						span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
+
+					.business-address(aria-label='Address')
+						| Address:
+						// TODO streetAddress, addressLocality, addressRegion
+						address.hidden
+							span(itemprop='streetAddress')
+								| {{ business.location.address1 }}
+								template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
+								template(v-if='business.location.address3') #[br] {{ business.location.address3 }}
+							span(itemprop='locality') {{ business.location.city }}
+							span(itemprop='region') {{ business.location.state }}
+							span(itemprop='postalCode') {{ business.location.zip_code }}
+						address(itemprop='address')
+							template(v-for='address in business.location.display_address') #[br] {{ address }}
+
+					.business-coordinates(itemprop='geo', aria-label='Coordinates')
+						| Coordinates: 
+						| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
+						| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
+
+					.business-catagories
+						| Categories
+						ul: li(v-for='category in business.categories')
+							span(itemprop='servesCuisine') {{ category.title }}
+
+					img.business-image(itemprop='image', :src='business.image_url')
+
+					p Raw data
+							ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
 
 		script(src='./main.js')
