@@ -16,55 +16,78 @@
   </head>
   <body>
     <div class="container" id="app">
+      <!-- div#intput.col-md-4-->
       <div id="intput">
         <h1 class="text-center">Hello there!</h1>
+        <!-- TODO: aria-label-->
         <!-- Term-->
-        <label>Search term</label>
-        <div class="input-group"><span class="input-group-addon">I want</span>
-          <input class="form-control" type="text" :value="searchTerm" v-model="searchTerm">
-        </div><br TODO>
+        <div class="form-group">
+          <label>Search term</label>
+          <div class="input-group"><span class="input-group-addon">I want</span>
+            <input class="form-control" type="text" :value="searchTerm" v-model="searchTerm">
+          </div>
+        </div>
         <!-- Location-->
-        <label>Location</label>
-        <div class="input-group"><span class="input-group-addon">I'm at</span>
-          <input class="form-control" type="text" :value="location" v-model="location">
-        </div><br TODO>
-        <button class="btn btn-default" @click="getOutput">Search!</button>
+        <div class="form-group">
+          <label>Location</label>
+          <div class="input-group"><span class="input-group-addon">I'm at</span>
+            <input class="form-control" type="text" :value="location" v-model="location">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default" @click="getOutput">Search!</button>
+        </div>
       </div>
+      <!-- div#output(v-if='output').col-md-8-->
       <div id="output" v-if="output"><br TODO>
         <div class="alert alert-success text-center">
-          <template v-if="output.total &gt; 20">Woah, I found {{ output.total }} matches! Here are the first 20:</template>
-          <template v-else>I found {{ output.total }} matches!</template>
+          <h3>
+            <template v-if="output.total &gt; 20">Woah, I found {{ output.total }} matches! Here are the first 20:</template>
+            <template v-else>I found {{ output.total }} matches!</template>
+          </h3>
         </div>
-        <div v-for="business in output.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
+        <!-- List restaurants-->
+        <div class="business row" v-for="business in output.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
           <div class="business-name" aria-label="Name">
             <h3><span itemprop="name">{{ business.name }}</span></h3>
           </div>
-          <div class="business-url" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url">Link to review</a></div>
-          <div class="business-phone" aria-label="Phone number">Phone Number: <span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
-          <div class="business-address" aria-label="Address">Address:
-            <!-- TODO streetAddress, addressLocality, addressRegion-->
-            <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
-                <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
-                <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
-            <address itemprop="address">
-              <template v-for="address in business.location.display_address"><br> {{ address }}</template>
-            </address>
+          <div class="col-md-2"><img class="img-rounded business-image" itemprop="image" :src="business.image_url" width="90px" height="90px"></div>
+          <div class="col-md-4">
+            <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
+            <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
+            <div class="business-price-range" aria-label="Price range">{{ business.price }}</div>
+            <div class="business-catagories">Categories:
+              <ul>
+                <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
+              </ul>
+            </div>
           </div>
-          <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
-            Coordinates: 
-            (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
-            <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+          <div class="col-md-4">
+            <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
+              <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
+                  <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
+                  <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
+              <address itemprop="address">
+                <template v-for="address in business.location.display_address"><br> {{ address }}</template>
+              </address>
+            </div>
+            <div class="business-phone" aria-label="Phone number"><span class="sr-only">Phone number:</span><span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
+            <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
+              Coordinates: 
+              (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
+              <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+            </div>
           </div>
-          <div class="business-catagories">Categories
-            <ul>
-              <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
-            </ul>
-          </div><img class="business-image" itemprop="image" :src="business.image_url">
-          <p>Raw data
-            <ul>
-              <li v-for="(prop, propName) in business">{{ propName }}: {{ prop }}</li>
-            </ul>
-          </p>
+          <div class="col-md-2">
+            <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="sr-only">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="90px"></a></div>
+          </div>
+          <div class="row col-md-12">
+            <p>Raw data
+              <ul>
+                <li v-for="(prop, propName) in business">{{ propName }}: {{ prop }}</li>
+              </ul>
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 var app = new Vue({
 	el: '#app',
 	data: {
-		// searchTerm: 'Chinese food',
-		searchTerm: 'Today Asian Market',
+		searchTerm: 'Chinese food',
 		location: 'Cary, NC',
 		output: null
 	},
@@ -25,6 +24,18 @@ var app = new Vue({
 		}
 	},
 	filters: {
-		join: (arr, separator) => arr.join(separator)
+		join: (arr, separator) => arr.join(separator),
+		getStarsImage: (rating) => {
+			// Half ratings
+			switch (rating) {
+				case 1.5: rating = '1_half'; break;
+				case 2.5: rating = '2_half'; break;
+				case 3.5: rating = '3_half'; break;
+				case 4.5: rating = '4_half'; break;
+			}
+
+			var src = '/yelp_stars/web_and_ios/regular_' + rating + '.png';
+			return src;
+		}
 	}
 });

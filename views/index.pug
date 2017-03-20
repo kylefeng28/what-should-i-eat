@@ -25,76 +25,102 @@ html.no-js(lang='en-US')
 
 	body
 		#app.container
+			// div#intput.col-md-4
 			div#intput
 				h1.text-center Hello there!
 
-				// Term
-				label Search term
-				.input-group
-					span.input-group-addon I want
-					input.form-control(type='text', :value='searchTerm', v-model='searchTerm')
+				// TODO: aria-label
 
-				br(TODO)
+				// Term
+				.form-group
+					label Search term
+					.input-group
+						span.input-group-addon I want
+						input.form-control(type='text', :value='searchTerm', v-model='searchTerm')
 
 				// Location
-				label Location
-				.input-group
-					span.input-group-addon I'm at
-					input.form-control(type='text', :value='location', v-model='location')
+				.form-group
+					label Location
+					.input-group
+						span.input-group-addon I'm at
+						input.form-control(type='text', :value='location', v-model='location')
 
-				br(TODO)
+				.form-group
+					button.btn.btn-default(@click='getOutput') Search!
 
-				button.btn.btn-default(@click='getOutput') Search!
-
+			// div#output(v-if='output').col-md-8
 			div#output(v-if='output')
 
 				br(TODO)
 
-				.alert.alert-success.text-center
+				.alert.alert-success.text-center: h3
 					template(v-if='output.total > 20')
 						| Woah, I found {{ output.total }} matches! Here are the first 20:
 					template(v-else)
 						| I found {{ output.total }} matches!
-				div(v-for='business in output.businesses'
+
+				// List restaurants
+				div.business.row(v-for='business in output.businesses'
 					itemscope, itemtype='http://schema.org/Restaurant',
 					aria-label='Restaurant')
+
 					.business-name(aria-label='Name')
 						h3 #[span(itemprop='name') {{ business.name }}]
 
-					.business-url(aria-label='Link to Yelp review')
-						a(itemprop='url', :href='business.url') Link to review
+					.col-md-2
+						img.img-rounded.business-image(itemprop='image',
+							:src='business.image_url',
+							width='90px',
+							height='90px')
 
-					.business-phone(aria-label='Phone number')
-						| Phone Number: 
-						span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
+					.col-md-4
+						.business-rating(aria-label='Yelp rating')
+							span.sr-only Rating: {{ business.rating.toPrecision(2) }}
+							img(:src="business.rating | getStarsImage",
+								:title='business.rating.toPrecision(2) + " star rating"')
 
-					.business-address(aria-label='Address')
-						| Address:
-						// TODO streetAddress, addressLocality, addressRegion
-						address.hidden
-							span(itemprop='streetAddress')
-								| {{ business.location.address1 }}
-								template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
-								template(v-if='business.location.address3') #[br] {{ business.location.address3 }}
-							span(itemprop='locality') {{ business.location.city }}
-							span(itemprop='region') {{ business.location.state }}
-							span(itemprop='postalCode') {{ business.location.zip_code }}
-						address(itemprop='address')
-							template(v-for='address in business.location.display_address') #[br] {{ address }}
+						.business-review-count(aria-label='Number of reviews')
+							| Based on {{ business.review_count }} reviews
 
-					.business-coordinates(itemprop='geo', aria-label='Coordinates')
-						| Coordinates: 
-						| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
-						| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
+						.business-price-range(aria-label='Price range')
+							| {{ business.price }}
 
-					.business-catagories
-						| Categories
-						ul: li(v-for='category in business.categories')
-							span(itemprop='servesCuisine') {{ category.title }}
+						.business-catagories
+							| Categories:
+							ul: li(v-for='category in business.categories')
+								span(itemprop='servesCuisine') {{ category.title }}
 
-					img.business-image(itemprop='image', :src='business.image_url')
+					.col-md-4
+						.business-address(aria-label='Address')
+							span.sr-only Address:
+							address.hidden
+								span(itemprop='streetAddress')
+									| {{ business.location.address1 }}
+									template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
+									template(v-if='business.location.address3') #[br] {{ business.location.address3 }}
+								span(itemprop='locality') {{ business.location.city }}
+								span(itemprop='region') {{ business.location.state }}
+								span(itemprop='postalCode') {{ business.location.zip_code }}
+							address(itemprop='address')
+								template(v-for='address in business.location.display_address') #[br] {{ address }}
 
-					p Raw data
+						.business-phone(aria-label='Phone number')
+							span.sr-only Phone number:
+							span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
+	
+						.business-coordinates(itemprop='geo', aria-label='Coordinates')
+							| Coordinates: 
+							| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
+							| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
+
+					.col-md-2
+						.business-yelp-review(aria-label='Link to Yelp review')
+							a(itemprop='url', :href='business.url')
+								span.sr-only Link to Yelp review
+								img(src='yelp_logo/yelp_logo_outline.png', width='90px')
+	
+					.row.col-md-12
+						p Raw data
 							ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
 
 		script(src='./main.js')
