@@ -22,6 +22,7 @@ html.no-js(lang='en-US')
 		// Vue
 		script(src='https://unpkg.com/vue')
 
+		link(rel='stylesheet', href='./main.css')
 
 	body
 		#app.container
@@ -53,7 +54,7 @@ html.no-js(lang='en-US')
 
 				br(TODO)
 
-				.alert.alert-success.text-center: h3
+				.row.alert.alert-success.text-center: h3
 					template(v-if='output.total > 20')
 						| Woah, I found {{ output.total }} matches! Here are the first 20:
 					template(v-else)
@@ -67,12 +68,14 @@ html.no-js(lang='en-US')
 					.business-name(aria-label='Name')
 						h3 #[span(itemprop='name') {{ business.name }}]
 
+					// Image
 					.col-md-2
 						img.img-rounded.business-image(itemprop='image',
 							:src='business.image_url',
 							width='90px',
 							height='90px')
 
+					// Rating, review count, price, categories
 					.col-md-4
 						.business-rating(aria-label='Yelp rating')
 							span.sr-only Rating: {{ business.rating.toPrecision(2) }}
@@ -89,7 +92,12 @@ html.no-js(lang='en-US')
 							| Categories:
 							ul: li(v-for='category in business.categories')
 								span(itemprop='servesCuisine') {{ category.title }}
+						
+						// TODO: transactions
+						// TODO: is_closed
+						// TODO: distance
 
+					// Location, phone
 					.col-md-4
 						.business-address(aria-label='Address')
 							span.sr-only Address:
@@ -113,6 +121,7 @@ html.no-js(lang='en-US')
 							| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
 							| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
 
+					// Yelp
 					.col-md-2
 						.business-yelp-review(aria-label='Link to Yelp review')
 							a(itemprop='url', :href='business.url')
@@ -120,7 +129,7 @@ html.no-js(lang='en-US')
 								img(src='yelp_logo/yelp_logo_outline.png', width='90px')
 	
 					.row.col-md-12
-						p Raw data
-							ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
+						// p Raw data
+						// 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
 
 		script(src='./main.js')

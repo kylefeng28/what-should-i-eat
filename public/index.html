@@ -13,6 +13,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Vue-->
     <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="./main.css">
   </head>
   <body>
     <div class="container" id="app">
@@ -40,7 +41,7 @@
       </div>
       <!-- div#output(v-if='output').col-md-8-->
       <div id="output" v-if="output"><br TODO>
-        <div class="alert alert-success text-center">
+        <div class="row alert alert-success text-center">
           <h3>
             <template v-if="output.total &gt; 20">Woah, I found {{ output.total }} matches! Here are the first 20:</template>
             <template v-else>I found {{ output.total }} matches!</template>
@@ -51,7 +52,9 @@
           <div class="business-name" aria-label="Name">
             <h3><span itemprop="name">{{ business.name }}</span></h3>
           </div>
+          <!-- Image-->
           <div class="col-md-2"><img class="img-rounded business-image" itemprop="image" :src="business.image_url" width="90px" height="90px"></div>
+          <!-- Rating, review count, price, categories-->
           <div class="col-md-4">
             <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
             <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
@@ -61,7 +64,11 @@
                 <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
               </ul>
             </div>
+            <!-- TODO: transactions-->
+            <!-- TODO: is_closed-->
+            <!-- TODO: distance-->
           </div>
+          <!-- Location, phone-->
           <div class="col-md-4">
             <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
               <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
@@ -78,15 +85,13 @@
               <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
             </div>
           </div>
+          <!-- Yelp-->
           <div class="col-md-2">
             <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="sr-only">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="90px"></a></div>
           </div>
           <div class="row col-md-12">
-            <p>Raw data
-              <ul>
-                <li v-for="(prop, propName) in business">{{ propName }}: {{ prop }}</li>
-              </ul>
-            </p>
+            <!-- p Raw data-->
+            <!-- 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}-->
           </div>
         </div>
       </div>
