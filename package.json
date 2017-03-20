@@ -6,6 +6,9 @@
   "author": "Kyle Feng",
   "license": "UNLICENSED",
   "private": true,
+  "scripts": {
+	  "start": "node index.js"
+  },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-pug": "^3.3.0",
@@ -18,5 +21,8 @@
     "express-promise-router": "^1.1.1",
     "pug": "^2.0.0-beta11",
     "yelp-fusion": "git+https://github.com/kylefeng28/yelp-fusion.git"
+  },
+  "engines": {
+	  "node": "7.6.0"
   }
 }
