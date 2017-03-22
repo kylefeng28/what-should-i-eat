@@ -20,3 +20,9 @@
 - Error handling (client-side and server-side)
 - Filter not closed and only restaurants
 - Map plotting
+  - https://developer.mozilla.org/en-US/Apps/Fundamentals/gather_and_modify_data/Plotting_yourself_on_the_map
+- Selectize: http://selectize.github.io/selectize.js/
+
+- Personality:
+  - Search took ___ seconds (Woah, PB! Faster than Usain Bolt!)
+  - Animation while loading
