@@ -51,43 +51,43 @@ html.no-js(lang='en-US')
 
 				br(TODO)
 
-				// TODO if output.success
-				.row.alert.center(:class='output.success ? "alert-success" : "alert-danger"'): h3
+				.row.card-panel.lighten-4.center(:class='output.success ? "green" : "red"'): h3
 					| {{ output.message }}
 
 				template(v-if='output.success')
+
 					// List restaurants
-					div.business.card.row.col.s12.m6(v-for='business in output.results.businesses'
+					.row: div.business.card.col.s12.m6(v-for='business in output.results.businesses'
 						itemscope, itemtype='http://schema.org/Restaurant',
 						aria-label='Restaurant')
-	
+
 						// Image
-						img.card-image.materialboxed.business-image(itemprop='image',
+						// TODO why shrunken?
+						img.card-image.responsive-img.materialboxed.business-image(itemprop='image',
 							:src='business.image_url',
 							:data-caption='business.name')
 
-						// Name
-						span.card-title.business-name(aria-label='Name')
-							| #[span(itemprop='name') {{ business.name }}]
+						// .row
+						.card-stacked: .card-content
+							// Name
+							.card-title.business-name.center(aria-label='Name')
+								| #[span(itemprop='name') {{ business.name }}]
 	
-	
-						.row
 							// Rating, review count, price, categories
-							.col.m4
+							div.col.s12.m6.center
 								.business-rating(aria-label='Yelp rating')
 									span.sr-only Rating: {{ business.rating.toPrecision(2) }}
 									img(:src="business.rating | getStarsImage",
 										:title='business.rating.toPrecision(2) + " star rating"')
 	
-								.business-review-count(aria-label='Number of reviews')
-									| Based on {{ business.review_count }} reviews
+								span.business-price-range(aria-label='Price range')
+									| {{ business.price }} 
 	
-								.business-price-range(aria-label='Price range')
-									| {{ business.price }}
+								span.business-review-count(aria-label='Number of reviews')
+									| - {{ business.review_count }} reviews
 	
-								.business-catagories
-									| Categories:
-									ul: li(v-for='category in business.categories')
+								.business-catagories(aria-label='Categories')
+									.chip(v-for='category in business.categories')
 										span(itemprop='servesCuisine') {{ category.title }}
 								
 								// TODO: transactions
@@ -95,10 +95,10 @@ html.no-js(lang='en-US')
 								// TODO: distance
 	
 							// Location, phone
-							.col.m4
+							div.col.s12.m6
 								.business-address(aria-label='Address')
 									span.sr-only Address:
-									address.hidden
+									address.hide
 										span(itemprop='streetAddress')
 											| {{ business.location.address1 }}
 											template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
@@ -113,24 +113,25 @@ html.no-js(lang='en-US')
 									span.sr-only Phone number:
 									span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
 			
-								.business-coordinates(itemprop='geo', aria-label='Coordinates')
+								// .business-coordinates(itemprop='geo', aria-label='Coordinates')
 									| Coordinates: 
 									| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
 									| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
 	
 							// Yelp
-							.col.m2
+							div.center
 								.business-yelp-review(aria-label='Link to Yelp review')
 									a(itemprop='url', :href='business.url')
 										span.hide Link to Yelp review
-										img(src='yelp_logo/yelp_logo_outline.png', width='150px')
+										img(src='yelp_logo/yelp_logo_outline.png', width='130px')
 		
-						.row.col.m12
-							// p Raw data
-							// 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
+						// .row.col.m12
+							p Raw data
+							ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
 
 		footer: .footer-copyright
 			.center.muted Made by Kyle Feng
+			.center.muted Powered by #[a(href='https://www.yelp.com/developers') Yelp's Fusion API.]
 
 		script(src='./babel-polyfill.min.js')
 		script(src='./main.js')
