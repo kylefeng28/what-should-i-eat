@@ -4,8 +4,6 @@ html.no-js(lang='en-US')
 		meta(charset='utf-8')
 		title Where Should I Eat Today?
 
-		// TODO require.js
-
 		// jQuery
 		script(src='https://code.jquery.com/jquery-3.2.0.slim.min.js',
 			integrity='sha256-qLAv0kBAihcHZLI3fv3WITKeRsUX27hd6upBBa0MSow=', crossorigin='anonymous')
@@ -49,88 +47,87 @@ html.no-js(lang='en-US')
 				.form-group
 					button.btn.btn-default(@click='getOutput') Search!
 
-			// div#output(v-if='output').col-md-8
-			div#output(v-if='output')
+			// div#output(v-if='output.show').col-md-8
+			div#output(v-if='output.show')
 
 				br(TODO)
 
-				.row.alert.alert-success.text-center: h3
-					template(v-if='output.total > 20')
-						| Woah, I found {{ output.total }} matches! Here are the first 20:
-					template(v-else)
-						| I found {{ output.total }} matches!
+				// TODO if output.success
+				.row.alert.text-center(:class='output.success ? "alert-success" : "alert-danger"'): h3
+					| {{ output.message }}
 
-				// List restaurants
-				div.business.row(v-for='business in output.businesses'
-					itemscope, itemtype='http://schema.org/Restaurant',
-					aria-label='Restaurant')
-
-					.business-name(aria-label='Name')
-						h3 #[span(itemprop='name') {{ business.name }}]
-
-					// Image
-					.col-md-2
-						img.img-rounded.business-image(itemprop='image',
-							:src='business.image_url',
-							width='90px',
-							height='90px')
-
-					// Rating, review count, price, categories
-					.col-md-4
-						.business-rating(aria-label='Yelp rating')
-							span.sr-only Rating: {{ business.rating.toPrecision(2) }}
-							img(:src="business.rating | getStarsImage",
-								:title='business.rating.toPrecision(2) + " star rating"')
-
-						.business-review-count(aria-label='Number of reviews')
-							| Based on {{ business.review_count }} reviews
-
-						.business-price-range(aria-label='Price range')
-							| {{ business.price }}
-
-						.business-catagories
-							| Categories:
-							ul: li(v-for='category in business.categories')
-								span(itemprop='servesCuisine') {{ category.title }}
-						
-						// TODO: transactions
-						// TODO: is_closed
-						// TODO: distance
-
-					// Location, phone
-					.col-md-4
-						.business-address(aria-label='Address')
-							span.sr-only Address:
-							address.hidden
-								span(itemprop='streetAddress')
-									| {{ business.location.address1 }}
-									template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
-									template(v-if='business.location.address3') #[br] {{ business.location.address3 }}
-								span(itemprop='locality') {{ business.location.city }}
-								span(itemprop='region') {{ business.location.state }}
-								span(itemprop='postalCode') {{ business.location.zip_code }}
-							address(itemprop='address')
-								template(v-for='address in business.location.display_address') #[br] {{ address }}
-
-						.business-phone(aria-label='Phone number')
-							span.sr-only Phone number:
-							span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
+				template(v-if='output.success')
+					// List restaurants
+					div.business.row(v-for='business in output.results.businesses'
+						itemscope, itemtype='http://schema.org/Restaurant',
+						aria-label='Restaurant')
 	
-						.business-coordinates(itemprop='geo', aria-label='Coordinates')
-							| Coordinates: 
-							| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
-							| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
-
-					// Yelp
-					.col-md-2
-						.business-yelp-review(aria-label='Link to Yelp review')
-							a(itemprop='url', :href='business.url')
-								span.sr-only Link to Yelp review
-								img(src='yelp_logo/yelp_logo_outline.png', width='90px')
+						.business-name(aria-label='Name')
+							h3 #[span(itemprop='name') {{ business.name }}]
 	
-					.row.col-md-12
-						// p Raw data
-						// 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
+						// Image
+						.col-md-2
+							img.img-rounded.business-image(itemprop='image',
+								:src='business.image_url',
+								width='90px',
+								height='90px')
+	
+						// Rating, review count, price, categories
+						.col-md-4
+							.business-rating(aria-label='Yelp rating')
+								span.sr-only Rating: {{ business.rating.toPrecision(2) }}
+								img(:src="business.rating | getStarsImage",
+									:title='business.rating.toPrecision(2) + " star rating"')
+	
+							.business-review-count(aria-label='Number of reviews')
+								| Based on {{ business.review_count }} reviews
+	
+							.business-price-range(aria-label='Price range')
+								| {{ business.price }}
+	
+							.business-catagories
+								| Categories:
+								ul: li(v-for='category in business.categories')
+									span(itemprop='servesCuisine') {{ category.title }}
+							
+							// TODO: transactions
+							// TODO: is_closed
+							// TODO: distance
+	
+						// Location, phone
+						.col-md-4
+							.business-address(aria-label='Address')
+								span.sr-only Address:
+								address.hidden
+									span(itemprop='streetAddress')
+										| {{ business.location.address1 }}
+										template(v-if='business.location.address2') #[br] {{ business.location.address2 }}
+										template(v-if='business.location.address3') #[br] {{ business.location.address3 }}
+									span(itemprop='locality') {{ business.location.city }}
+									span(itemprop='region') {{ business.location.state }}
+									span(itemprop='postalCode') {{ business.location.zip_code }}
+								address(itemprop='address')
+									template(v-for='address in business.location.display_address') #[br] {{ address }}
+	
+							.business-phone(aria-label='Phone number')
+								span.sr-only Phone number:
+								span(itemprop='telephone') #[a(:href='"tel:" + business.phone') {{ business.display_phone }}]
+		
+							.business-coordinates(itemprop='geo', aria-label='Coordinates')
+								| Coordinates: 
+								| (#[span(itemprop='geo.lattitude') {{ business.coordinates.latitude }}], 
+								| #[span(itemprop='geo.longitude') {{ business.coordinates.longitude }}])
+	
+						// Yelp
+						.col-md-2
+							.business-yelp-review(aria-label='Link to Yelp review')
+								a(itemprop='url', :href='business.url')
+									span.sr-only Link to Yelp review
+									img(src='yelp_logo/yelp_logo_outline.png', width='90px')
+		
+						.row.col-md-12
+							// p Raw data
+							// 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}
 
 		script(src='./babel-polyfill.min.js')
 		script(src='./main.js')

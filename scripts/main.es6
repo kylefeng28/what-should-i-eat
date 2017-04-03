@@ -3,7 +3,12 @@ var app = new Vue({
 	data: {
 		searchTerm: 'Chinese food',
 		location: 'Cary, NC',
-		output: null
+		output: {
+			message: '',
+			show: false,
+			success: true,
+			results: undefined
+		}
 	},
 	computed: {
 	},
@@ -12,15 +17,35 @@ var app = new Vue({
 			console.log('Searching for ' + this.searchTerm);
 
 			// TODO try catch
-			const result = await axios.get('/api/search', {
-				params: {
-					term: this.searchTerm,
-					location: this.location
+			try {
+				const result = await axios.get('/api/search', {
+					params: {
+						term: this.searchTerm,
+						location: this.location
+					}
+				});
+
+				this.output.results = result.data;
+				console.log('Received result: ', result);
+
+				if (this.output.results.total > 20) {
+					this.output.message = 'Woah, I found ' + this.output.results.total + ' matches! Here are the first 20:';
 				}
-			});
+				else {
+					this.output.message = 'I found ' + this.output.results.total + ' matches!';
+				}
+				this.output.success = true;
+			}
+			catch (e) {
+				console.log('Error: ', e);
+				this.output.message = 'There was a problem with your search! Perhaps try again later?'
+				this.output.results = null;
+				this.output.success = false;
+			}
+			finally {
+				this.output.show = true;
+			}
 			
-			this.output = result.data;
-			console.log(this.output);
 		}
 	},
 	filters: {

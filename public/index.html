@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>Where Should I Eat Today?</title>
-    <!-- TODO require.js-->
     <!-- jQuery-->
     <script src="https://code.jquery.com/jquery-3.2.0.slim.min.js" integrity="sha256-qLAv0kBAihcHZLI3fv3WITKeRsUX27hd6upBBa0MSow=" crossorigin="anonymous"></script>
     <!-- Bootstrap-->
@@ -39,61 +38,61 @@
           <button class="btn btn-default" @click="getOutput">Search!</button>
         </div>
       </div>
-      <!-- div#output(v-if='output').col-md-8-->
-      <div id="output" v-if="output"><br TODO>
-        <div class="row alert alert-success text-center">
-          <h3>
-            <template v-if="output.total &gt; 20">Woah, I found {{ output.total }} matches! Here are the first 20:</template>
-            <template v-else>I found {{ output.total }} matches!</template>
-          </h3>
+      <!-- div#output(v-if='output.show').col-md-8-->
+      <div id="output" v-if="output.show"><br TODO>
+        <!-- TODO if output.success-->
+        <div class="row alert text-center" :class="output.success ? &quot;alert-success&quot; : &quot;alert-danger&quot;">
+          <h3>{{ output.message }}</h3>
         </div>
-        <!-- List restaurants-->
-        <div class="business row" v-for="business in output.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
-          <div class="business-name" aria-label="Name">
-            <h3><span itemprop="name">{{ business.name }}</span></h3>
-          </div>
-          <!-- Image-->
-          <div class="col-md-2"><img class="img-rounded business-image" itemprop="image" :src="business.image_url" width="90px" height="90px"></div>
-          <!-- Rating, review count, price, categories-->
-          <div class="col-md-4">
-            <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
-            <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
-            <div class="business-price-range" aria-label="Price range">{{ business.price }}</div>
-            <div class="business-catagories">Categories:
-              <ul>
-                <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
-              </ul>
+        <template v-if="output.success">
+          <!-- List restaurants-->
+          <div class="business row" v-for="business in output.results.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
+            <div class="business-name" aria-label="Name">
+              <h3><span itemprop="name">{{ business.name }}</span></h3>
             </div>
-            <!-- TODO: transactions-->
-            <!-- TODO: is_closed-->
-            <!-- TODO: distance-->
-          </div>
-          <!-- Location, phone-->
-          <div class="col-md-4">
-            <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
-              <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
-                  <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
-                  <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
-              <address itemprop="address">
-                <template v-for="address in business.location.display_address"><br> {{ address }}</template>
-              </address>
+            <!-- Image-->
+            <div class="col-md-2"><img class="img-rounded business-image" itemprop="image" :src="business.image_url" width="90px" height="90px"></div>
+            <!-- Rating, review count, price, categories-->
+            <div class="col-md-4">
+              <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
+              <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
+              <div class="business-price-range" aria-label="Price range">{{ business.price }}</div>
+              <div class="business-catagories">Categories:
+                <ul>
+                  <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
+                </ul>
+              </div>
+              <!-- TODO: transactions-->
+              <!-- TODO: is_closed-->
+              <!-- TODO: distance-->
             </div>
-            <div class="business-phone" aria-label="Phone number"><span class="sr-only">Phone number:</span><span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
-            <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
-              Coordinates: 
-              (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
-              <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+            <!-- Location, phone-->
+            <div class="col-md-4">
+              <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
+                <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
+                    <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
+                    <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
+                <address itemprop="address">
+                  <template v-for="address in business.location.display_address"><br> {{ address }}</template>
+                </address>
+              </div>
+              <div class="business-phone" aria-label="Phone number"><span class="sr-only">Phone number:</span><span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
+              <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
+                Coordinates: 
+                (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
+                <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+              </div>
+            </div>
+            <!-- Yelp-->
+            <div class="col-md-2">
+              <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="sr-only">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="90px"></a></div>
+            </div>
+            <div class="row col-md-12">
+              <!-- p Raw data-->
+              <!-- 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}-->
             </div>
           </div>
-          <!-- Yelp-->
-          <div class="col-md-2">
-            <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="sr-only">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="90px"></a></div>
-          </div>
-          <div class="row col-md-12">
-            <!-- p Raw data-->
-            <!-- 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}-->
-          </div>
-        </div>
+        </template>
       </div>
     </div>
     <script src="./babel-polyfill.min.js"></script>

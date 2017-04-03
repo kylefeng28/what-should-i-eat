@@ -26,3 +26,7 @@
 - Personality:
   - Search took ___ seconds (Woah, PB! Faster than Usain Bolt!)
   - Animation while loading
+
+- Materialize
+- Error handling
+  - Location doesn't exist

@@ -7,7 +7,12 @@ var app = new Vue({
 	data: {
 		searchTerm: 'Chinese food',
 		location: 'Cary, NC',
-		output: null
+		output: {
+			message: '',
+			show: false,
+			success: true,
+			results: undefined
+		}
 	},
 	computed: {},
 	methods: {
@@ -21,7 +26,8 @@ var app = new Vue({
 								console.log('Searching for ' + this.searchTerm);
 
 								// TODO try catch
-								_context.next = 3;
+								_context.prev = 1;
+								_context.next = 4;
 								return axios.get('/api/search', {
 									params: {
 										term: this.searchTerm,
@@ -29,19 +35,43 @@ var app = new Vue({
 									}
 								});
 
-							case 3:
+							case 4:
 								result = _context.sent;
 
 
-								this.output = result.data;
-								console.log(this.output);
+								this.output.results = result.data;
+								console.log('Received result: ', result);
 
-							case 6:
+								if (this.output.results.total > 20) {
+									this.output.message = 'Woah, I found ' + this.output.results.total + ' matches! Here are the first 20:';
+								} else {
+									this.output.message = 'I found ' + this.output.results.total + ' matches!';
+								}
+								this.output.success = true;
+								_context.next = 17;
+								break;
+
+							case 11:
+								_context.prev = 11;
+								_context.t0 = _context['catch'](1);
+
+								console.log('Error: ', _context.t0);
+								this.output.message = 'There was a problem with your search! Perhaps try again later?';
+								this.output.results = null;
+								this.output.success = false;
+
+							case 17:
+								_context.prev = 17;
+
+								this.output.show = true;
+								return _context.finish(17);
+
+							case 20:
 							case 'end':
 								return _context.stop();
 						}
 					}
-				}, _callee, this);
+				}, _callee, this, [[1, 11, 17, 20]]);
 			}));
 
 			function getOutput() {
