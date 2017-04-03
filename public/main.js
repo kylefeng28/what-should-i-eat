@@ -6,7 +6,7 @@ var app = new Vue({
 	el: '#app',
 	data: {
 		searchTerm: 'Chinese food',
-		location: 'Cary, NC',
+		location: 'Chapel Hill, NC',
 		output: {
 			message: '',
 			show: false,

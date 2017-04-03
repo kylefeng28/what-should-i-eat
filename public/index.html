@@ -22,88 +22,90 @@
     <link rel="stylesheet" href="./main.css">
   </head>
   <body>
-    <div class="container" id="app">
-      <!-- div#intput.col-md-4-->
+    <header>
+      <h1 class="center">Hello there!</h1>
+    </header>
+    <main class="container" id="app">
+      <!-- div#intput.col.m4-->
       <div id="intput">
-        <h1 class="text-center">Hello there!</h1>
-        <!-- TODO: aria-label-->
         <!-- Term-->
         <div class="row">
-          <div class="input-field col-12">
+          <div class="input-field col m12">
             <label for="search-term">I want</label>
             <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm">
           </div>
         </div>
         <!-- Location-->
         <div class="row">
-          <div class="input-field col-12">
+          <div class="input-field col m12">
             <label for="location">I'm at</label>
             <input id="location" type="text" :value="location" v-model="location">
           </div>
         </div>
         <div class="form-group"><a class="btn waves-effect waves-red" @click="getOutput">Search!</a></div>
       </div>
-      <!-- div#output(v-if='output.show').col-md-8-->
+      <!-- div#output(v-if='output.show').col.m8-->
       <div id="output" v-if="output.show"><br TODO>
         <!-- TODO if output.success-->
-        <div class="row alert text-center" :class="output.success ? &quot;alert-success&quot; : &quot;alert-danger&quot;">
+        <div class="row alert center" :class="output.success ? &quot;alert-success&quot; : &quot;alert-danger&quot;">
           <h3>{{ output.message }}</h3>
         </div>
         <template v-if="output.success">
           <!-- List restaurants-->
-          <div class="business row" v-for="business in output.results.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
-            <div class="business-name" aria-label="Name">
-              <h3><span itemprop="name">{{ business.name }}</span></h3>
-            </div>
-            <!-- Image-->
-            <div class="col-md-2"><img class="img-rounded business-image" itemprop="image" :src="business.image_url" width="90px" height="90px"></div>
-            <!-- Rating, review count, price, categories-->
-            <div class="col-md-4">
-              <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
-              <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
-              <div class="business-price-range" aria-label="Price range">{{ business.price }}</div>
-              <div class="business-catagories">Categories:
-                <ul>
-                  <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
-                </ul>
+          <div class="business card row col s12 m6" v-for="business in output.results.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
+            <!-- Image--><img class="card-image materialboxed business-image" itemprop="image" :src="business.image_url" :data-caption="business.name">
+            <!-- Name--><span class="card-title business-name" aria-label="Name"><span itemprop="name">{{ business.name }}</span></span>
+            <div class="row">
+              <!-- Rating, review count, price, categories-->
+              <div class="col m4">
+                <div class="business-rating" aria-label="Yelp rating"><span class="sr-only">Rating: {{ business.rating.toPrecision(2) }}</span><img :src="business.rating | getStarsImage" :title="business.rating.toPrecision(2) + &quot; star rating&quot;"></div>
+                <div class="business-review-count" aria-label="Number of reviews">Based on {{ business.review_count }} reviews</div>
+                <div class="business-price-range" aria-label="Price range">{{ business.price }}</div>
+                <div class="business-catagories">Categories:
+                  <ul>
+                    <li v-for="category in business.categories"><span itemprop="servesCuisine">{{ category.title }}</span></li>
+                  </ul>
+                </div>
+                <!-- TODO: transactions-->
+                <!-- TODO: is_closed-->
+                <!-- TODO: distance-->
               </div>
-              <!-- TODO: transactions-->
-              <!-- TODO: is_closed-->
-              <!-- TODO: distance-->
-            </div>
-            <!-- Location, phone-->
-            <div class="col-md-4">
-              <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
-                <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
-                    <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
-                    <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
-                <address itemprop="address">
-                  <template v-for="address in business.location.display_address"><br> {{ address }}</template>
-                </address>
+              <!-- Location, phone-->
+              <div class="col m4">
+                <div class="business-address" aria-label="Address"><span class="sr-only">Address:</span>
+                  <address class="hidden"><span itemprop="streetAddress">{{ business.location.address1 }}
+                      <template v-if="business.location.address2"><br> {{ business.location.address2 }}</template>
+                      <template v-if="business.location.address3"><br> {{ business.location.address3 }}</template></span><span itemprop="locality">{{ business.location.city }}</span><span itemprop="region">{{ business.location.state }}</span><span itemprop="postalCode">{{ business.location.zip_code }}</span></address>
+                  <address itemprop="address">
+                    <template v-for="address in business.location.display_address"><br> {{ address }}</template>
+                  </address>
+                </div>
+                <div class="business-phone" aria-label="Phone number"><span class="sr-only">Phone number:</span><span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
+                <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
+                  Coordinates: 
+                  (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
+                  <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+                </div>
               </div>
-              <div class="business-phone" aria-label="Phone number"><span class="sr-only">Phone number:</span><span itemprop="telephone"><a :href="&quot;tel:&quot; + business.phone">{{ business.display_phone }}</a></span></div>
-              <div class="business-coordinates" itemprop="geo" aria-label="Coordinates">
-                Coordinates: 
-                (<span itemprop="geo.lattitude">{{ business.coordinates.latitude }}</span>, 
-                <span itemprop="geo.longitude">{{ business.coordinates.longitude }}</span>)
+              <!-- Yelp-->
+              <div class="col m2">
+                <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="hide">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="150px"></a></div>
               </div>
             </div>
-            <!-- Yelp-->
-            <div class="col-md-2">
-              <div class="business-yelp-review" aria-label="Link to Yelp review"><a itemprop="url" :href="business.url"><span class="sr-only">Link to Yelp review</span><img src="yelp_logo/yelp_logo_outline.png" width="90px"></a></div>
-            </div>
-            <div class="row col-md-12">
+            <div class="row col m12">
               <!-- p Raw data-->
               <!-- 	ul: li(v-for='(prop, propName) in business') {{ propName }}: {{ prop }}-->
             </div>
           </div>
         </template>
       </div>
-    </div>
+    </main>
+    <footer>
+      <div class="footer-copyright">
+        <div class="center muted">Made by Kyle Feng</div>
+      </div>
+    </footer>
     <script src="./babel-polyfill.min.js"></script>
     <script src="./main.js"></script>
-    <div class="footer">
-      <div class="text-center text-muted">Made by Kyle Feng</div>
-    </div>
   </body>
 </html>
