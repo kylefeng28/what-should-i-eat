@@ -4,10 +4,17 @@
     <meta charset="utf-8">
     <title>Where Should I Eat Today?</title>
     <!-- jQuery-->
-    <script src="https://code.jquery.com/jquery-3.2.0.slim.min.js" integrity="sha256-qLAv0kBAihcHZLI3fv3WITKeRsUX27hd6upBBa0MSow=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
+    -->
+    <!-- script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+    integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
+    
+    -->
+    <!-- Materialize-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- Axios-->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Vue-->
@@ -21,22 +28,20 @@
         <h1 class="text-center">Hello there!</h1>
         <!-- TODO: aria-label-->
         <!-- Term-->
-        <div class="form-group">
-          <label>Search term</label>
-          <div class="input-group"><span class="input-group-addon">I want</span>
-            <input class="form-control" type="text" :value="searchTerm" v-model="searchTerm">
+        <div class="row">
+          <div class="input-field col-12">
+            <label for="search-term">I want</label>
+            <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm">
           </div>
         </div>
         <!-- Location-->
-        <div class="form-group">
-          <label>Location</label>
-          <div class="input-group"><span class="input-group-addon">I'm at</span>
-            <input class="form-control" type="text" :value="location" v-model="location">
+        <div class="row">
+          <div class="input-field col-12">
+            <label for="location">I'm at</label>
+            <input id="location" type="text" :value="location" v-model="location">
           </div>
         </div>
-        <div class="form-group">
-          <button class="btn btn-default" @click="getOutput">Search!</button>
-        </div>
+        <div class="form-group"><a class="btn waves-effect waves-red" @click="getOutput">Search!</a></div>
       </div>
       <!-- div#output(v-if='output.show').col-md-8-->
       <div id="output" v-if="output.show"><br TODO>

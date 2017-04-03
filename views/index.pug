@@ -5,14 +5,19 @@ html.no-js(lang='en-US')
 		title Where Should I Eat Today?
 
 		// jQuery
-		script(src='https://code.jquery.com/jquery-3.2.0.slim.min.js',
-			integrity='sha256-qLAv0kBAihcHZLI3fv3WITKeRsUX27hd6upBBa0MSow=', crossorigin='anonymous')
+		script(src="https://code.jquery.com/jquery-3.2.1.min.js",
+					integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=",
+					crossorigin="anonymous")
 
 		// Bootstrap
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+		// link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
 			integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
-		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+		// script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
 			integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
+
+		// Materialize
+		link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js')
 
 		// Axios
 		script(src='https://unpkg.com/axios/dist/axios.min.js')
@@ -31,21 +36,17 @@ html.no-js(lang='en-US')
 				// TODO: aria-label
 
 				// Term
-				.form-group
-					label Search term
-					.input-group
-						span.input-group-addon I want
-						input.form-control(type='text', :value='searchTerm', v-model='searchTerm')
+				.row: .input-field.col-12
+					label(for='search-term') I want
+					input#search-term(type='text', :value='searchTerm', v-model='searchTerm')
 
 				// Location
-				.form-group
-					label Location
-					.input-group
-						span.input-group-addon I'm at
-						input.form-control(type='text', :value='location', v-model='location')
+				.row: .input-field.col-12
+					label(for='location') I'm at
+					input#location(type='text', :value='location', v-model='location')
 
 				.form-group
-					button.btn.btn-default(@click='getOutput') Search!
+					a.btn.waves-effect.waves-red(@click='getOutput') Search!
 
 			// div#output(v-if='output.show').col-md-8
 			div#output(v-if='output.show')
