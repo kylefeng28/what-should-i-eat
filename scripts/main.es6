@@ -1,8 +1,10 @@
-var app = new Vue({
+let app = new Vue({
 	el: '#app',
 	data: {
 		searchTerm: 'Chinese food',
+		locationPicked: 'mine',
 		location: 'Chapel Hill, NC',
+		geolocation: undefined,
 		output: {
 			message: '',
 			show: false,
@@ -13,28 +15,54 @@ var app = new Vue({
 	computed: {
 	},
 	methods: {
+		getGeolocation: async function() {
+			let geo = await new Promise((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition((pos) => {
+					console.log('Geolocation: ', pos);
+					resolve(pos);
+				});
+			});
+
+			this.geolocation = geo;
+		},
+
 		getOutput: async function () {
 			console.log('Searching for ' + this.searchTerm);
 
 			// TODO try catch
 			try {
-				const result = await axios.get('/api/search', {
-					params: {
-						term: this.searchTerm,
-						location: this.location
-					}
-				});
+				let params = {
+					term: this.searchTerm,
+				};
+				if (this.locationPicked === 'mine') {
+					await this.getGeolocation();
+					params.latitude = this.geolocation.coords.latitude;
+					params.longitude = this.geolocation.coords.longitude;
+					console.log('p', params);
+				}
+				else if (this.locationPicked === 'custom') {
+					params.location = this.location;
+				}
+
+				const result = await axios.get('/api/search', { params: params });
 
 				this.output.results = result.data;
 				console.log('Received result: ', result);
 
-				if (this.output.results.total > 20) {
-					this.output.message = 'Woah, I found ' + this.output.results.total + ' matches! Here are the first 20:';
+				if (this.output.results.total == 0) {
+					this.output.message = 'I couldn\'t find any results, sorry!';
+					this.output.success = false;
+				}
+				else if (this.output.results.total > 20) {
+					let exclamations = ['Woah, ', 'Sweet, ', 'Awesome, '];
+					let exclamation = exclamations[Math.floor(Math.random() * exclamations.length)];
+					this.output.message = exclamation + 'I found ' + this.output.results.total + ' matches! Here are the first 20:';
+					this.output.success = true;
 				}
 				else {
 					this.output.message = 'I found ' + this.output.results.total + ' matches!';
+					this.output.success = true;
 				}
-				this.output.success = true;
 			}
 			catch (e) {
 				console.log('Error: ', e);
@@ -59,7 +87,7 @@ var app = new Vue({
 				case 4.5: rating = '4_half'; break;
 			}
 
-			var src = '/yelp_stars/web_and_ios/regular_' + rating + '.png';
+			let src = '/yelp_stars/web_and_ios/regular_' + rating + '.png';
 			return src;
 		}
 	}

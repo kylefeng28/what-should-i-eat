@@ -2,7 +2,7 @@ doctype html
 html.no-js(lang='en-US')
 	head
 		meta(charset='utf-8')
-		title Where Should I Eat Today?
+		title What Should I Eat Today?
 
 		// jQuery
 		script(src="https://code.jquery.com/jquery-3.2.1.min.js",
@@ -17,6 +17,7 @@ html.no-js(lang='en-US')
 
 		// Materialize
 		link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css')
+		link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js')
 
 		// Axios
@@ -34,16 +35,25 @@ html.no-js(lang='en-US')
 			// div#intput.col.m4
 			div#intput
 				// Term
+				i.prefix.material-icons search
 				.row: .input-field.col.m12
 					label(for='search-term') I want
 					input#search-term(type='text', :value='searchTerm', v-model='searchTerm')
 
 				// Location
-				.row: .input-field.col.m12
+				form.row.input-field.col.m12
+					i.prefix.material-icons my_location
+					input(name='location-group', type='radio', id='my-location', value='mine', v-model='locationPicked')
+					label(for='my-location') My location {{ geolocation ? '(' + geolocation.coords.latitude + ', ' + geolocation.coords.longitude + ')' : '' }}
+					input(name='location-group', type='radio', id='custom-location', value='custom', v-model='locationPicked')
+					label(for='custom-location') Custom location
+
+				.row.input-field.col.m12(v-if='locationPicked == "custom"')
+					i.prefix.material-icons location_on
 					label(for='location') I'm at
 					input#location(type='text', :value='location', v-model='location')
 
-				.form-group
+				.input-field
 					a.btn.waves-effect.waves-red(@click='getOutput') Search!
 
 			// div#output(v-if='output.show').col.m8
