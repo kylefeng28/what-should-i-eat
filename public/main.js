@@ -118,30 +118,32 @@ var app = new Vue({
 									this.output.message = 'I found ' + this.output.results.total + ' matches!';
 									this.output.success = true;
 								}
-								_context2.next = 27;
+								this.scrollToResults();
+								_context2.next = 29;
 								break;
 
-							case 21:
-								_context2.prev = 21;
+							case 22:
+								_context2.prev = 22;
 								_context2.t0 = _context2['catch'](1);
 
 								console.log('Error: ', _context2.t0);
 								this.output.message = 'There was a problem with your search! Perhaps try again later?';
 								this.output.results = null;
 								this.output.success = false;
+								this.scrollToResults();
 
-							case 27:
-								_context2.prev = 27;
+							case 29:
+								_context2.prev = 29;
 
 								this.output.show = true;
-								return _context2.finish(27);
+								return _context2.finish(29);
 
-							case 30:
+							case 32:
 							case 'end':
 								return _context2.stop();
 						}
 					}
-				}, _callee2, this, [[1, 21, 27, 30]]);
+				}, _callee2, this, [[1, 22, 29, 32]]);
 			}));
 
 			function getOutput() {
@@ -149,7 +151,19 @@ var app = new Vue({
 			}
 
 			return getOutput;
-		}()
+		}(),
+
+		scrollToInput: function scrollToInput() {
+			$('html, body').animate({
+				scrollTop: $('#input').offset().top
+			}, 500);
+		},
+
+		scrollToResults: function scrollToResults() {
+			$('html, body').animate({
+				scrollTop: $('#results').offset().top
+			}, 500);
+		}
 	},
 	filters: {
 		join: function join(arr, separator) {

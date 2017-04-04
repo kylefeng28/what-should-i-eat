@@ -31,19 +31,18 @@
           <p>
             Enter the first thing that comes to mind about food, and enter your location, and I'll tell you
             about the places I find!
-            
-          </p>
+          </p><a class="btn" id="get-started" @click="scrollToInput">Let's get started!</a>
         </div>
       </div>
     </header>
     <main class="container" id="app">
       <!-- div#intput.col.m4-->
-      <div id="intput">
+      <div id="input">
         <h3>Search</h3>
         <!-- Term-->
         <div class="row input-field col m12"><i class="prefix material-icons">search</i>
           <label for="search-term">I want</label>
-          <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm">
+          <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm" @keyup.enter="getOutput">
         </div>
         <!-- Location-->
         <form class="row input-field col m12"><i class="prefix material-icons">my_location</i>
@@ -59,7 +58,8 @@
         <div class="input-field"><a class="btn waves-effect waves-red" @click="getOutput">Search!</a></div>
       </div>
       <!-- div#output(v-if='output.show').col.m8-->
-      <div id="output" v-if="output.show"><br TODO>
+      <div id="output" v-if="output.show">
+        <h3 id="results">Results</h3><br TODO>
         <div class="row card-panel lighten-4 center" :class="output.success ? &quot;green&quot; : &quot;red&quot;">
           <h3>{{ output.message }}</h3>
         </div>

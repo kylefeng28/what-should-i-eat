@@ -39,16 +39,17 @@ html.no-js(lang='en-US')
 					p.
 						Enter the first thing that comes to mind about food, and enter your location, and I'll tell you
 						about the places I find!
+					a#get-started.btn(@click='scrollToInput') Let's get started!
 
 		main#app.container
 			// div#intput.col.m4
-			div#intput
+			div#input
 				h3 Search
 				// Term
 				.row.input-field.col.m12
 					i.prefix.material-icons search
 					label(for='search-term') I want
-					input#search-term(type='text', :value='searchTerm', v-model='searchTerm')
+					input#search-term(type='text', :value='searchTerm', v-model='searchTerm', @keyup.enter='getOutput')
 
 				// Location
 				form.row.input-field.col.m12
@@ -68,6 +69,7 @@ html.no-js(lang='en-US')
 
 			// div#output(v-if='output.show').col.m8
 			div#output(v-if='output.show')
+				h3#results Results
 
 				br(TODO)
 

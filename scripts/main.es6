@@ -63,17 +63,31 @@ let app = new Vue({
 					this.output.message = 'I found ' + this.output.results.total + ' matches!';
 					this.output.success = true;
 				}
+				this.scrollToResults();
 			}
-			catch (e) {
-				console.log('Error: ', e);
+			catch (ex) {
+				console.log('Error: ', ex);
 				this.output.message = 'There was a problem with your search! Perhaps try again later?'
 				this.output.results = null;
 				this.output.success = false;
+				this.scrollToResults();
 			}
 			finally {
 				this.output.show = true;
 			}
 			
+		},
+
+		scrollToInput: function() {
+			$('html, body').animate({
+				scrollTop: $('#input').offset().top
+			}, 500);
+		},
+
+		scrollToResults: function() {
+			$('html, body').animate({
+				scrollTop: $('#results').offset().top
+			}, 500);
 		}
 	},
 	filters: {
