@@ -24,22 +24,31 @@
   </head>
   <body>
     <header>
-      <h1 class="center">Hello there!</h1>
+      <div class="row"><img class="responsive-img col sm12 m4" src="chef.jpg" height="200px">
+        <div class="col sm12 m8">
+          <h1>Hello there!</h1>
+          <p>Ever had a hard time deciding where you want to eat? Let me help with that!</p>
+          <p>
+            Enter the first thing that comes to mind about food, and enter your location, and I'll tell you
+            about the places I find!
+            
+          </p>
+        </div>
+      </div>
     </header>
     <main class="container" id="app">
       <!-- div#intput.col.m4-->
       <div id="intput">
-        <!-- Term--><i class="prefix material-icons">search</i>
-        <div class="row">
-          <div class="input-field col m12">
-            <label for="search-term">I want</label>
-            <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm">
-          </div>
+        <h3>Search</h3>
+        <!-- Term-->
+        <div class="row input-field col m12"><i class="prefix material-icons">search</i>
+          <label for="search-term">I want</label>
+          <input id="search-term" type="text" :value="searchTerm" v-model="searchTerm">
         </div>
         <!-- Location-->
         <form class="row input-field col m12"><i class="prefix material-icons">my_location</i>
           <input name="location-group" type="radio" id="my-location" value="mine" v-model="locationPicked">
-          <label for="my-location">My location {{ geolocation ? '(' + geolocation.coords.latitude + ', ' + geolocation.coords.longitude + ')' : '' }}</label>
+          <label for="my-location">My location {{ geolocation ? '(' + geolocation.coords.latitude + ', ' + geolocation.coords.longitude + ')' : '(calculating...)' }}</label>
           <input name="location-group" type="radio" id="custom-location" value="custom" v-model="locationPicked">
           <label for="custom-location">Custom location</label>
         </form>
@@ -58,8 +67,7 @@
           <!-- List restaurants-->
           <div class="row">
             <div class="business card col s12 m6" v-for="business in output.results.businesses" itemscope itemtype="http://schema.org/Restaurant" aria-label="Restaurant">
-              <!-- Image-->
-              <!-- TODO why shrunken?--><img class="card-image responsive-img materialboxed business-image" itemprop="image" :src="business.image_url" :data-caption="business.name">
+              <!-- Image--><img class="card-image responsive-img materialboxed business-image" itemprop="image" :src="business.image_url" :data-caption="business.name">
               <!-- .row-->
               <div class="card-stacked">
                 <div class="card-content">
@@ -112,7 +120,8 @@
     <footer>
       <div class="footer-copyright">
         <div class="center muted">Made by Kyle Feng</div>
-        <div class="center muted">Powered by <a href="https://www.yelp.com/developers">Yelp's Fusion API.</a></div>
+        <div class="center muted">Powered by <a href="https://www.yelp.com/developers">Yelp's Fusion API</a></div>
+        <div class="center muted">Images courtesy of <a href="http://www.freepik.com/free-vector/small-chef-illustration_800609.htm">Freepik</a></div>
       </div>
     </footer>
     <script src="./babel-polyfill.min.js"></script>

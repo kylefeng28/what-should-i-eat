@@ -1,9 +1,9 @@
 let app = new Vue({
 	el: '#app',
 	data: {
-		searchTerm: 'Chinese food',
+		searchTerm: '',
 		locationPicked: 'mine',
-		location: 'Chapel Hill, NC',
+		location: '',
 		geolocation: undefined,
 		output: {
 			message: '',
@@ -35,7 +35,7 @@ let app = new Vue({
 					term: this.searchTerm,
 				};
 				if (this.locationPicked === 'mine') {
-					await this.getGeolocation();
+					if (!this.geoLocation) await this.getGeolocation();
 					params.latitude = this.geolocation.coords.latitude;
 					params.longitude = this.geolocation.coords.longitude;
 					console.log('p', params);
@@ -90,5 +90,8 @@ let app = new Vue({
 			let src = '/yelp_stars/web_and_ios/regular_' + rating + '.png';
 			return src;
 		}
+	},
+	mounted: function() {
+		this.getGeolocation();
 	}
 });

@@ -5,9 +5,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var app = new Vue({
 	el: '#app',
 	data: {
-		searchTerm: 'Chinese food',
+		searchTerm: '',
 		locationPicked: 'mine',
-		location: 'Chapel Hill, NC',
+		location: '',
 		geolocation: undefined,
 		output: {
 			message: '',
@@ -70,30 +70,35 @@ var app = new Vue({
 								};
 
 								if (!(this.locationPicked === 'mine')) {
-									_context2.next = 11;
+									_context2.next = 12;
 									break;
 								}
 
-								_context2.next = 6;
+								if (this.geoLocation) {
+									_context2.next = 7;
+									break;
+								}
+
+								_context2.next = 7;
 								return this.getGeolocation();
 
-							case 6:
+							case 7:
 								params.latitude = this.geolocation.coords.latitude;
 								params.longitude = this.geolocation.coords.longitude;
 								console.log('p', params);
-								_context2.next = 12;
+								_context2.next = 13;
 								break;
 
-							case 11:
+							case 12:
 								if (this.locationPicked === 'custom') {
 									params.location = this.location;
 								}
 
-							case 12:
-								_context2.next = 14;
+							case 13:
+								_context2.next = 15;
 								return axios.get('/api/search', { params: params });
 
-							case 14:
+							case 15:
 								result = _context2.sent;
 
 
@@ -113,11 +118,11 @@ var app = new Vue({
 									this.output.message = 'I found ' + this.output.results.total + ' matches!';
 									this.output.success = true;
 								}
-								_context2.next = 26;
+								_context2.next = 27;
 								break;
 
-							case 20:
-								_context2.prev = 20;
+							case 21:
+								_context2.prev = 21;
 								_context2.t0 = _context2['catch'](1);
 
 								console.log('Error: ', _context2.t0);
@@ -125,18 +130,18 @@ var app = new Vue({
 								this.output.results = null;
 								this.output.success = false;
 
-							case 26:
-								_context2.prev = 26;
+							case 27:
+								_context2.prev = 27;
 
 								this.output.show = true;
-								return _context2.finish(26);
+								return _context2.finish(27);
 
-							case 29:
+							case 30:
 							case 'end':
 								return _context2.stop();
 						}
 					}
-				}, _callee2, this, [[1, 20, 26, 29]]);
+				}, _callee2, this, [[1, 21, 27, 30]]);
 			}));
 
 			function getOutput() {
@@ -166,5 +171,8 @@ var app = new Vue({
 			var src = '/yelp_stars/web_and_ios/regular_' + rating + '.png';
 			return src;
 		}
+	},
+	mounted: function mounted() {
+		this.getGeolocation();
 	}
 });
